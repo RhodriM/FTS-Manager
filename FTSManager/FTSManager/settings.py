@@ -50,13 +50,12 @@ INSTALLED_APPS = [
     'events',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -85,24 +84,16 @@ WSGI_APPLICATION = 'FTSManager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': 'cspg.cs.cf.ac.uk',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv("DB_NAME"),
-            'USER': os.getenv("DB_USER"),
-            'PASSWORD': os.getenv("DB_PASSWORD"),
-            'HOST': 'cspg.cs.cf.ac.uk',
-            'PORT': '5432',
-        }
-    }
+}
 
 
 
@@ -146,8 +137,9 @@ AUTH_LDAP_GROUP_SEARCH = LDAPSearchUnion(
 
 
 # SUPERUSERS/ADMINS ARE DEFINED HERE.
-STAFF = ["c1106886", "c1009692"]
-SUPERUSERS = ["c1106886", "c1009692"]
+# @todo: not hard-code this
+STAFF = ["c1106886", "c1009692", "c0829960", "c1567198"]
+SUPERUSERS = ["c1106886", "c1009692", "c0829960", "c1567198"]
 
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
     "is_staff": ["cn={0},{1}".format(st, GROUPS_DN) for st in set(STAFF+SUPERUSERS)],
